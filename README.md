@@ -1,8 +1,7 @@
 # Azure Architecture Decisions
 
-A public log of architecture decision records (ADRs) from real-world Azure
-platform engineering and migration work, written as reusable decision
-frameworks.
+A public log of architecture decision records (ADRs) for Azure platform
+engineering, written as reusable decision frameworks.
 
 ## What this is
 
