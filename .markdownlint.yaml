@@ -1,0 +1,13 @@
+# markdownlint configuration (consumed by markdownlint-cli2)
+#
+# Defaults are kept except where a rule conflicts with the deliberate,
+# author-approved ADR content. Per repo policy we configure the rule rather
+# than reformat the prose.
+
+# MD013/line-length: the ADR prose is hand-wrapped by the author; do not
+# enforce a fixed line length.
+MD013: false
+
+# MD034/no-bare-urls: the "More Information" sections cite documentation as
+# plain URLs by design so they read as references, not link text.
+MD034: false
