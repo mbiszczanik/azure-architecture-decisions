@@ -1,8 +1,7 @@
 # Azure Architecture Decisions
 
-A public log of architecture decision records (ADRs) from real-world Azure
-platform engineering and migration work, written as reusable decision
-frameworks.
+A public log of architecture decision records (ADRs) for Azure platform
+engineering, written as reusable decision frameworks.
 
 ## What this is
 
@@ -63,6 +62,6 @@ You are welcome to reuse these frameworks with attribution.
 
 ## Author
 
-Marcin Biszczanik, Cloud & Platform Architect.
+Marcin Biszczanik, Cloud & Platform Consultant.
 [GitHub profile](https://github.com/mbiszczanik) |
 [LinkedIn](https://www.linkedin.com/in/marcin-biszczanik/)
