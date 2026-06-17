@@ -51,6 +51,13 @@ use Stacks natively: Option A**, with deny settings introduced gradually
 break-glass procedure matures). Adopting the toolchain's native primitive
 costs less than maintaining a divergence from it.
 
+A caveat that strengthens the gradual approach rather than weakening it:
+adopting Stacks is not the same as getting the drift guarantee for free.
+Current AVM PLZ releases default to a deny mode of None, so the deny
+enforcement that actually prevents out-of-band change is opt-in, set per
+scope as a deliberate act. Plan for "Stacks deployed, deny widened
+deliberately" as two separate steps, not one.
+
 **For an existing framework built on classic deployments, or where no
 upstream component forces the issue: Option B is a legitimate v1**, provided
 the compensating set below is actually deployed, not just intended. Migrating
@@ -74,7 +81,10 @@ stack, in order of importance:
    resources.
 4. Scheduled what-if drift detection (read-only) with an actionable response
    runbook: investigate via Activity Log, decide roll-back vs reconcile,
-   document, and ask whether the drift signals a missing guardrail.
+   document, and ask whether the drift signals a missing guardrail. Note that
+   what-if runs against a template, not against a stack: it is a compensating
+   control for scopes outside Stacks, and does not (yet) report drift on
+   stack-managed resources directly.
 
 Note what compensation cannot give you: Policy deny covers enumerated cases,
 not "everything this deployment manages", and nothing in the compensating set
@@ -133,9 +143,12 @@ door was open; deny settings keep it shut.
 
 ## More Information
 
-Date-sensitive facts: Stacks API maturity, the exact deny-settings
-capabilities, and which AVM PLZ components consume Stacks natively all
-evolve; verify against
+Date-sensitive facts: Stacks have been GA since mid-2024. Deny modes are
+None, DenyDelete and DenyWriteAndDelete; actionOnUnmanage options are
+detachAll, deleteResources and deleteAll. As of mid-2026, what-if is not
+supported for stacks, and current AVM PLZ releases default the deny mode to
+None. All of this, plus the exact deny-settings capabilities and which AVM PLZ
+components consume Stacks natively, evolves; verify against
 https://learn.microsoft.com/azure/azure-resource-manager/bicep/deployment-stacks
 and the AVM PLZ release notes before reuse.
 
