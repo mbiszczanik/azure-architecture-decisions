@@ -135,9 +135,11 @@ separately and leave it for last.
   change policy) that exceed typical community module quality.
 * Good, because the same resource modules serve both the platform and the
   workload layers, giving the framework end-to-end consistency.
-* Good, because it is built for Deployment Stacks (see ADR-0002): its
-  cross-management-group role assignments sit in separate templates because
-  stacks do not support them, a limitation the accelerator already handles.
+* Good, because it deploys through Deployment Stacks (see ADR-0002): its
+  bootstrap creates a stack for every template at management group,
+  subscription and resource group scope, and its cross-management-group role
+  assignments sit in separate templates because stacks do not support them,
+  a limitation the accelerator already handles.
 * Bad, because every AVM module the accelerator uses is on a 0.x version
   (23 of 23 at v2.4.0, as of 2026-10-25): production ready per AVM, but
   without the v1.0 promise that breaking changes come with a major version.
@@ -191,16 +193,21 @@ primary source. Re-verify them before reusing this analysis.
 * AVM: 0.x modules are production ready; full semantic versioning applies
   from v1.0.
   Source: https://azure.github.io/Azure-Verified-Modules/resources/faq/
-* The accelerator's cross-management-group role-assignment templates exist
-  because Deployment Stacks do not support those assignments (stated in the
-  templates' own metadata).
+* The accelerator deploys through Deployment Stacks: at bootstrap release
+  v7.3.2 of 2026-10-10, the local deploy script and the Azure DevOps and
+  GitHub pipeline templates create management group, subscription and
+  resource group stacks.
+  Source: https://github.com/Azure/accelerator-bootstrap-modules
+* Supporting source: the accelerator's cross-management-group
+  role-assignment templates exist because Deployment Stacks do not support
+  those assignments (stated in the templates' own metadata).
   Source: https://github.com/Azure/alz-bicep-accelerator
 * In-place migration from classic to the AVM accelerator; networking not
   yet covered.
   Source: https://azure.github.io/Azure-Landing-Zones/bicep/migration/
 
 Related: ADR-0002 (Deployment Stacks adoption interacts with this choice,
-because the AVM accelerator is built for Stacks), ADR-0003 (module
+because the AVM accelerator deploys through Stacks), ADR-0003 (module
 versioning strategy for the custom layer that exists regardless of the
 option chosen here).
 
@@ -213,6 +220,9 @@ Changes: dated the classic ALZ-Bicep support timeline, marked Option D as
 not recommended for new work, replaced per-component GA verification with
 per-module version and status verification, added the path for existing
 classic deployments, and confirmed the Deployment Stacks link to ADR-0002.
+The accelerator bootstrap (`Azure/accelerator-bootstrap-modules` v7.3.2) is
+now the direct source that the accelerator deploys through Deployment
+Stacks; the role-assignment metadata remains as the supporting source.
 
 The June reasoning, superseded by this revision:
 
