@@ -51,7 +51,10 @@ Decisions queued for future records:
 * One decision per record, numbered `NNNN-kebab-case-title.md` under `adr/`.
 * New records start from [adr/template.md](adr/template.md).
 * Records are immutable once accepted; revisiting a decision produces a new
-  record that supersedes the old one.
+  record that supersedes the old one. Exception: when a date-sensitive fact
+  changes a decision framework's conclusion, the record is revised in place,
+  with a revision date in its header and the superseded text kept in its
+  "Revision history" section.
 * Each record names its date-sensitive facts so future readers know what to
   re-verify.
 
