@@ -4,7 +4,7 @@
 | --- | --- |
 | Status | Accepted (as a decision framework) |
 | Date | 2026-06-12 |
-| Revised | 2026-10-25 (see [Revision history](#revision-history)) |
+| Revised | 2026-11-16 (see [Revision history](#revision-history)) |
 | Decision type | Decision framework (pattern) |
 | Tags | landing-zone, bicep, avm, alz, iac-strategy |
 
@@ -73,12 +73,17 @@ module (Option C for that piece), not the framework.
 "official Microsoft" answer now points to the AVM accelerator, which removes
 the stakeholder argument that once favoured classic.
 
-**Option D is no longer recommended for new work** (revised 2026-10-25). Its
-premise was a proven classic foundation now and a modern one later. With the
-AVM platform landing zone GA and the default, and classic ALZ-Bicep archived
-on 2027-02-16, a v1 on classic leaves support within months of go-live: the
-deferred migration lands during hypercare, and the "proven now" benefit no
-longer exists. The trade keeps the rewrite cost and buys nothing.
+**Option D is an exception for new work, not a default response to a
+deadline** (revised 2026-11-16). Its premise was a proven classic foundation
+now and a modern one later. With the AVM platform landing zone GA and the
+default, and classic ALZ-Bicep archived on 2027-02-16, a v1 on classic
+leaves support within months of go-live: the deferred migration lands during
+hypercare, and the "proven now" benefit is small. The support end date is a
+constraint on the plan, not evidence that a migration will be funded. Accept
+Option D only with three things on record: the concrete blocker in the AVM
+accelerator (a requirement its supported configuration does not meet), a
+named owner of the exception, and a credible exit plan with a funded
+migration. "We will migrate later" is not that plan.
 
 **Option A standalone is not defensible for new work**: the accelerator no
 longer offers it, and its repository is archived on 2027-02-16.
@@ -106,8 +111,9 @@ separately and leave it for last.
 * We accept: per-module version due diligence is a standing cost of any
   AVM-based choice; until a module reaches v1.0, every version bump is
   reviewed against its changelog.
-* We close: classic ALZ-Bicep for new work, both standalone (Option A) and
-  as a first phase (Option D).
+* We close: classic ALZ-Bicep standalone (Option A) for new work.
+* We restrict: classic ALZ-Bicep as a first phase (Option D) is an exception
+  that needs a documented blocker, an owner and an exit plan.
 
 ## Pros and Cons of the Options
 
@@ -165,7 +171,8 @@ separately and leave it for last.
 
 ### Option D: Phased (A for v1, migrate to B post-go-live)
 
-Not recommended for new work since 2026-10-25; kept for the record.
+An exception for new work since 2026-11-16 (not recommended since
+2026-10-25): it needs a documented blocker, an owner and an exit plan.
 
 * Good, because it decoupled the deadline from the strategic destination
   while the AVM platform landing zone was not yet the default.
@@ -212,6 +219,26 @@ versioning strategy for the custom layer that exists regardless of the
 option chosen here).
 
 ## Revision history
+
+### 2026-11-16: Option D is an exception, not closed
+
+The long-form article (`mbiszczanik.dev/blog/choose-landing-zone-bicep/`)
+calls classic first, AVM later "an exception I would ask the team to
+justify" and requires the concrete AVM blocker, an owner and an exit plan,
+where this record said the path was closed. The article's wording is better
+calibrated: the 2027-02-16 archive date (README of `Azure/ALZ-Bicep`, checked
+2026-11-16) constrains the plan but does not show a migration will be
+funded. The record now uses the article's conditions. Option A standalone
+stays not defensible for new work. The default recommendation (Option B) is
+unchanged.
+
+The 2026-10-25 wording, superseded by this revision:
+
+> **Option D is no longer recommended for new work** (revised 2026-10-25).
+> [...] The trade keeps the rewrite cost and buys nothing.
+>
+> We close: classic ALZ-Bicep for new work, both standalone (Option A) and
+> as a first phase (Option D).
 
 ### 2026-10-25: classic end of support dated, Option D retired
 
