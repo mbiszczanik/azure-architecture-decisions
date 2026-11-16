@@ -4,6 +4,7 @@
 | --- | --- |
 | Status | Accepted (as a decision framework) |
 | Date | 2026-06-12 |
+| Revised | 2026-11-16 (see [Revision history](#revision-history)) |
 | Decision type | Decision framework (pattern) |
 | Tags | deployment-stacks, bicep, drift, governance, lifecycle |
 
@@ -53,9 +54,13 @@ costs less than maintaining a divergence from it.
 
 A caveat that strengthens the gradual approach rather than weakening it:
 adopting Stacks is not the same as getting the drift guarantee for free.
-Current AVM PLZ releases default to a deny mode of None, so the deny
-enforcement that actually prevents out-of-band change is opt-in, set per
-scope as a deliberate act. Plan for "Stacks deployed, deny widened
+The accelerator bootstrap (`Azure/accelerator-bootstrap-modules` v7.3.2,
+released 2026-10-10, checked 2026-11-16) passes `DenySettingsMode = "None"`
+to its stacks in the local script, the Azure DevOps helper and the GitHub
+Actions action, so the deny enforcement that actually prevents out-of-band
+change is opt-in, set per scope as a deliberate act. It also passes
+`ActionOnUnmanage = "DeleteAll"`: a resource removed from a template is
+deleted, not detached. Plan for "Stacks deployed, deny widened
 deliberately" as two separate steps, not one.
 
 **For an existing framework built on classic deployments, or where no
@@ -82,9 +87,12 @@ stack, in order of importance:
 4. Scheduled what-if drift detection (read-only) with an actionable response
    runbook: investigate via Activity Log, decide roll-back vs reconcile,
    document, and ask whether the drift signals a missing guardrail. Note that
-   what-if runs against a template, not against a stack: it is a compensating
-   control for scopes outside Stacks, and does not (yet) report drift on
-   stack-managed resources directly.
+   a template what-if (`az deployment ... what-if`) runs against a template,
+   not against a stack: it is the compensating control for scopes outside
+   Stacks. What-if for stacks is generally available since 2026-08-18 and
+   previews what a stack update would create, detach or delete; whether it
+   reports out-of-band drift on stack-managed resources is not verified
+   (last checked 2026-11-16).
 
 Note what compensation cannot give you: Policy deny covers enumerated cases,
 not "everything this deployment manages", and nothing in the compensating set
@@ -143,15 +151,65 @@ door was open; deny settings keep it shut.
 
 ## More Information
 
-Date-sensitive facts: Stacks have been GA since mid-2024. Deny modes are
-None, DenyDelete and DenyWriteAndDelete; actionOnUnmanage options are
-detachAll, deleteResources and deleteAll. As of mid-2026, what-if is not
-supported for stacks, and current AVM PLZ releases default the deny mode to
-None. All of this, plus the exact deny-settings capabilities and which AVM PLZ
-components consume Stacks natively, evolves; verify against
-https://learn.microsoft.com/azure/azure-resource-manager/bicep/deployment-stacks
-and the AVM PLZ release notes before reuse.
+Date-sensitive facts, all as of 2026-11-16 unless stated:
+
+* Deployment Stacks are generally available, announced 2024-05-23 ([ARM
+  Deployment Stacks now GA](https://techcommunity.microsoft.com/blog/azuregovernanceandmanagementblog/arm-deployment-stacks-now-ga/4145469)).
+* Deny modes are `None`, `DenyDelete` and `DenyWriteAndDelete`;
+  `actionOnUnmanage` options are `detachAll`, `deleteResources` and
+  `deleteAll` ([Deployment stacks in Bicep](https://learn.microsoft.com/azure/azure-resource-manager/bicep/deployment-stacks),
+  page dated 2026-11-09).
+* What-if for stacks is generally available in all regions, announced
+  2026-08-18 ([announcement](https://techcommunity.microsoft.com/blog/azuregovernanceandmanagementblog/now-generally-available-what-if-for-azure-deployment-stacks/4547614),
+  [Preview deployment stack changes with what-if](https://learn.microsoft.com/azure/azure-resource-manager/bicep/deployment-stacks-what-if),
+  page dated 2026-11-04). The result is a
+  `Microsoft.Resources/deploymentStacksWhatIfResults` resource, not a
+  transient output.
+* The accelerator's own "What-If" mode does not use stack what-if: its
+  pipeline helper runs `New-Az<scope>Deployment -WhatIf` with
+  `ValidationLevel = "providerNoRbac"` against the template, and the
+  "Deployment Stack" mode runs `New-Az<scope>DeploymentStack`
+  (`Azure/accelerator-bootstrap-modules` v7.3.2, the Azure DevOps helper
+  `alz/azuredevops/pipelines/bicep/templates/helpers/bicep-deploy.yaml` and
+  the GitHub action `alz/github/actions/bicep/templates/actions/bicep-deploy/action.yaml`).
+* The same bootstrap creates management group, subscription and resource
+  group stacks with `DenySettingsMode = "None"` and
+  `ActionOnUnmanage = "DeleteAll"`, so current AVM PLZ deployments adopt
+  Stacks natively with deny enforcement off by default.
+
+These evolve; verify against the sources above and the bootstrap releases
+before reuse.
 
 Related: ADR-0001 (the landing zone implementation choice can force this
 decision: choosing current AVM PLZ largely chooses Stacks), ADR-0003
 (stack-managed scopes change how module updates roll out).
+
+## Revision history
+
+### 2026-11-16: facts re-checked, stack what-if now supported
+
+Re-checked every date-sensitive fact against its primary source on this day.
+Changes: each fact now carries an "as of" date and a link; the accelerator
+bootstrap v7.3.2 is cited for the deny mode and for the Stacks deployments;
+`ActionOnUnmanage = "DeleteAll"` in the bootstrap was added; the claim that
+what-if is not supported for stacks was replaced, because what-if for stacks
+is generally available (announced 2026-08-18) and the accelerator's "What-If"
+mode uses a template what-if, not stack what-if. The default recommendation
+(Option A for a greenfield platform on a toolchain that already uses Stacks)
+is unchanged, so the record is revised in place.
+
+Not verified: whether stack what-if reports out-of-band drift on
+stack-managed resources (the pages describe previewing the changes a stack
+update makes).
+
+The June wording, superseded by this revision:
+
+> Stacks have been GA since mid-2024. [...] As of mid-2026, what-if is not
+> supported for stacks, and current AVM PLZ releases default the deny mode to
+> None.
+>
+> Note that what-if runs against a template, not against a stack: it is a
+> compensating control for scopes outside Stacks, and does not (yet) report
+> drift on stack-managed resources directly.
+
+### 2026-06-12: accepted
