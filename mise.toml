@@ -1,0 +1,13 @@
+# Offline half of .github/workflows/quality.yml. The link check needs the network and stays in CI only.
+
+[tools]
+node = "24.22.3"
+"npm:markdownlint-cli2" = "0.24.1"
+
+[tasks."check:fast"]
+description = "Seconds: Markdown lint of every note, offline, read-only"
+run = "markdownlint-cli2 \"**/*.md\""
+
+[tasks.check]
+description = "Offline lane: same as check:fast; add further offline validators here"
+depends = ["check:fast"]
