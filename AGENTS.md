@@ -21,3 +21,8 @@ Node and `markdownlint-cli2` are pinned in `mise.toml`; `mise install` provides 
 - English, no hype; one or two real numbers instead of adjectives. Headings are the question a reader would ask; the first sentence answers it.
 - A new record updates the README index and removes its line from the backlog in the same change.
 - Never present work the author did not author as the author's own.
+
+## Before publishing a record as a blog article
+
+- Re-verify every date-sensitive fact on the publishing day.
+- If the article changes a conclusion, update the record in the same week, so the two do not drift.
