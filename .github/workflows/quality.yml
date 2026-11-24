@@ -9,15 +9,19 @@ permissions:
   contents: read
 
 jobs:
-  markdownlint:
+  check:
     name: Markdown lint
     runs-on: ubuntu-latest
+    env:
+      MISE_TRUSTED_CONFIG_PATHS: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@v7
-      - name: Lint Markdown
-        uses: DavidAnson/markdownlint-cli2-action@v24
+      - uses: jdx/mise-action@924e7c586e33d7d4bae9c14e26c5d22e2beb6e78 # v5.3.0
         with:
-          globs: "**/*.md"
+          version: 2026.11.2
+          cache: false
+      # check = markdownlint-cli2 over every note (see mise.toml)
+      - run: mise run check
 
   linkcheck:
     name: Link check
